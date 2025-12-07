@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Student - Capture</title>
+    
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <style>
+        /* Custom Styles to match the screenshot */
+        
+        /* The main outer boxes */
+        .content-box {
+            border: 2px solid #333; /* Thicker dark border */
+            padding: 20px;
+            height: 500px; /* Fixed height to match side-by-side look */
+            position: relative; /* For absolute positioning of buttons */
+            background-color: white;
+        }
+
+        /* Large User Icon */
+        .user-icon-large {
+            font-size: 80px;
+            color: #222;
+        }
+
+        /* Custom Input styling (Box with border) */
+        .custom-input {
+            border: 2px solid #999;
+            padding: 8px;
+            width: 100%;
+            margin-bottom: 15px;
+            color: #555;
+        }
+        
+        /* Styling for the Inputs with the Arrow Button on the right */
+        .input-group {
+            display: flex;
+            margin-bottom: 15px;
+        }
+        .input-group input {
+            border: 2px solid #999;
+            border-right: none; /* Remove right border to merge with button */
+            padding: 8px;
+            width: 100%;
+        }
+        .input-group .icon-box {
+            border: 2px solid #999;
+            background-color: #f1f1f1;
+            padding: 8px 12px;
+            cursor: pointer;
+        }
+
+        /* The Grid Table in the Right Box */
+        .info-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        .info-table td {
+            border: 2px solid #333; /* Dark grid lines */
+            padding: 12px;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        .label-col { width: 35%; } /* Width for IDNO, LASTNAME, etc */
+        .value-col { width: 65%; } /* Width for the empty values */
+
+        /* Blue Buttons (SNAP / SAVE) */
+        .action-button {
+            background-color: #009be5;
+            color: white;
+            padding: 10px 40px;
+            font-weight: bold;
+            border: none;
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body class="w3-white">
+
+    <div class="w3-bar w3-indigo w3-text-white w3-padding">
+        <div class="w3-large">Python(20420) 10:30 - 12:01 MW</div>
+    </div>
+
+    <div class="w3-container" style="padding: 40px 50px;">
+        
+        <div class="w3-row-padding">
+            
+            <div class="w3-half">
+                <div class="content-box">
+                    
+                    <div class="w3-center w3-margin-bottom">
+                        <i class="fa fa-user-circle user-icon-large"></i>
+                    </div>
+
+                    <input class="custom-input" type="text" placeholder="IDNO">
+                    <input class="custom-input" type="text" placeholder="LASTNAME">
+                    <input class="custom-input" type="text" placeholder="FIRSTNAME">
+
+                    <div class="input-group">
+                        <input type="text" placeholder="COURSE">
+                        <div class="icon-box"><i class="fa fa-arrow-down"></i></div>
+                    </div>
+                    
+                    <div class="input-group">
+                        <input type="text" placeholder="LEVEL">
+                        <div class="icon-box"><i class="fa fa-arrow-down"></i></div>
+                    </div>
+
+                    <button class="action-button">SNAP</button>
+
+                </div>
+            </div>
+
+            <div class="w3-half">
+                <div class="content-box">
+                    
+                    <div class="w3-center w3-margin-bottom">
+                        <i class="fa fa-user-circle user-icon-large"></i>
+                    </div>
+
+                    <div class="w3-center" style="height: 60px;">
+                        </div>
+
+                    <table class="info-table">
+                        <tr>
+                            <td class="label-col">IDNO</td>
+                            <td class="value-col"></td>
+                        </tr>
+                        <tr>
+                            <td class="label-col">LASTNAME</td>
+                            <td class="value-col"></td>
+                        </tr>
+                        <tr>
+                            <td class="label-col">FIRSTNAME</td>
+                            <td class="value-col"></td>
+                        </tr>
+                        <tr>
+                            <td class="label-col">COURSE</td>
+                            <td class="value-col"></td>
+                        </tr>
+                        <tr>
+                            <td class="label-col">LEVEL</td>
+                            <td class="value-col"></td>
+                        </tr>
+                    </table>
+
+                    <button class="action-button">SAVE</button>
+
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <footer class="w3-container w3-center" style="margin-top: 20px;">
+        <hr class="w3-border-grey" style="margin: 0 50px 20px 50px;">
+        <p class="w3-small w3-text-grey">Copyright © Jude Khalil B Veloso, Rasheed Borris Yap, 2025</p>
+    </footer>
+
+</body>
+</html>

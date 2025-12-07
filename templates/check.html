@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Profile</title>
+    
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <style>
+        /* Custom Indigo to match the header */
+        .header-blue {
+            background-color: #3f51b5 !important;
+            color: white !important;
+        }
+
+        /* The Main Box Container */
+        .profile-container {
+            width: 100%;
+            max-width: 400px; /* Limits width to look like the screenshot */
+            margin: 50px auto; /* Centers it horizontally */
+            text-align: center;
+        }
+
+        /* The User Icon */
+        .user-icon-circle {
+            font-size: 80px;
+            color: #222;
+            border: 3px solid #222;
+            border-radius: 50%;
+            padding: 10px;
+            width: 110px;
+            height: 110px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        /* The Data Table */
+        .profile-table {
+            width: 100%;
+            border-collapse: collapse;
+            border: 1px solid black; /* Outer border */
+        }
+        .profile-table td {
+            border: 1px solid black; /* Grid lines */
+            padding: 15px;
+            text-align: left;
+            font-size: 16px;
+        }
+        
+        /* Left Column Styles (Labels) */
+        .label-col {
+            width: 40%;
+            font-weight: 900; /* Extra bold like image */
+            color: black;
+        }
+        
+        /* Right Column Styles (Values) */
+        .value-col {
+            width: 60%;
+            color: #333;
+        }
+    </style>
+</head>
+<body class="w3-white">
+
+    <div class="w3-bar w3-indigo w3-text-white w3-padding">
+        <div class="w3-large">Python(20420) 10:30 - 12:01 MW</div>
+    </div>
+
+    <div class="profile-container">
+        
+        <div class="user-icon-circle">
+            <i class="fa fa-user"></i>
+        </div>
+
+        <table class="profile-table">
+            <tr>
+                <td class="label-col">IDNO</td>
+                <td class="value-col"></td> </tr>
+            <tr>
+                <td class="label-col">LASTNAME</td>
+                <td class="value-col"></td> </tr>
+            <tr>
+                <td class="label-col">FIRSTNAME</td>
+                <td class="value-col"></td> </tr>
+            <tr>
+                <td class="label-col">COURSE</td>
+                <td class="value-col"></td> </tr>
+            <tr>
+                <td class="label-col">LEVEL</td>
+                <td class="value-col"></td> </tr>
+        </table>
+
+    </div>
+
+    <footer class="w3-container w3-center" style="margin-top: 50px;">
+        <hr class="w3-border-grey" style="margin: 0 20px 20px 20px;">
+        <p class="w3-small w3-text-grey">Copyright © Jude Khalil Veloso, Rasheed Boriss Yap, 2025</p>
+    </footer>
+
+</body>
+</html>

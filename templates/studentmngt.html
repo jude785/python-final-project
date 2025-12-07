@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Management</title>
+    
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <style>
+        /* --- Same Styles as Previous Pages --- */
+        .sidebar-blue {
+            background-color: #009be5 !important;
+            color: white !important;
+        }
+        
+        /* Table Grid Styling */
+        .grid-table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        .grid-table th, .grid-table td {
+            border: 1px solid #ccc; /* Standard grey border */
+            padding: 8px;
+            text-align: center;
+        }
+        /* Header style for this specific table (Light Grey) */
+        .student-table-header {
+            background-color: #f1f1f1;
+            color: #666;
+            font-weight: bold;
+        }
+
+        /* --- New Styles for this Page --- */
+        /* The box around the form */
+        .student-form-box {
+            border: 1px solid #ccc;
+            padding: 20px;
+            background-color: #fff;
+            height: 100%; /* Try to fill height */
+        }
+        
+        /* Underlined input fields */
+        .underlined-input {
+            border: none;
+            border-bottom: 1px solid #ccc;
+            padding: 8px 0;
+            display: block;
+            width: 100%;
+            outline: none;
+            margin-bottom: 20px;
+        }
+        .underlined-input:focus {
+            border-bottom: 2px solid #009be5;
+        }
+
+        /* Action buttons in the table */
+        .action-btn {
+            padding: 4px 8px;
+            margin: 0 2px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .btn-view { background-color: transparent; border: 1px solid #ccc; color: #333; }
+        .btn-delete { background-color: transparent; border: 1px solid red; color: red; }
+    </style>
+</head>
+<body class="w3-light-grey">
+
+    <div class="w3-bar w3-indigo w3-text-white w3-top" style="z-index:4">
+        <div class="w3-bar-item w3-large">Python(20420) 10:30 - 12:01 MW</div>
+    </div>
+
+    <div class="w3-sidebar w3-bar-block sidebar-blue" style="width:240px; top:43px; z-index:3;">
+        <div style="margin-top: 20px;"></div>
+        <a href="#" class="w3-bar-item w3-button w3-padding-16">USER MNGT</a>
+        <a href="#" class="w3-bar-item w3-button w3-padding-16 w3-white w3-text-blue">STUDENT MNGT</a>
+        <a href="#" class="w3-bar-item w3-button w3-padding-16">VIEW ATTENDANCE</a>
+        <a href="#" class="w3-bar-item w3-button w3-padding-16">LOGOUT</a>
+    </div>
+
+    <div class="w3-main" style="margin-left: 240px; margin-top: 43px;">
+        
+        <div class="w3-container" style="padding: 20px;">
+            
+            <div class="w3-row" style="margin-bottom: 15px; align-items: center; display: flex;">
+                <div class="w3-col m6">
+                    <h4 style="margin:0;">STUDENT MANAGEMENT</h4>
+                </div>
+                <div class="w3-col m6 w3-right-align">
+                    <button class="w3-button sidebar-blue" style="padding: 6px 20px;">+ADD</button>
+                </div>
+            </div>
+
+            <div class="w3-row-padding" style="margin: 0 -16px;">
+                
+                <div class="w3-col l4 m5">
+                    <div class="student-form-box">
+                        <div class="w3-center" style="margin-bottom: 20px;">
+                            <i class="fa fa-user-circle-o w3-text-grey" style="font-size: 60px;"></i>
+                        </div>
+                        
+                        <input class="underlined-input" type="text" placeholder="">
+                        <input class="underlined-input" type="text" placeholder="">
+                        <input class="underlined-input" type="text" placeholder="">
+                        
+                        <div style="height: 100px;"></div>
+
+                        <button class="w3-button sidebar-blue w3-block" style="margin-top: 20px;">UPDATE</button>
+                    </div>
+                </div>
+
+                <div class="w3-col l8 m7">
+                    <table class="grid-table w3-white">
+                        <thead>
+                            <tr class="student-table-header">
+                                <th>IDNO</th>
+                                <th>LASTNAME</th>
+                                <th>FIRSTNAME</th>
+                                <th>COURSE</th>
+                                <th>LEVEL</th>
+                                <th>ACTION</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr style="height: 40px;">
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td style="width: 100px;">
+                                    <button class="action-btn btn-view"><i class="fa fa-eye"></i></button>
+                                    <button class="action-btn btn-delete"><i class="fa fa-times"></i></button>
+                                </td>
+                            </tr>
+                            <tr style="height: 40px;"><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+                            <tr style="height: 40px;"><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+                            <tr style="height: 40px;"><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+                            <tr style="height: 40px;"><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+            
+        <footer class="w3-container w3-center" style="margin-top: 30px; padding-bottom: 20px;">
+            <hr class="w3-border-grey" style="margin-bottom: 15px;">
+            <p class="w3-small w3-text-grey" style="margin:0;">Copyright © Jude Khalil Veloso, Rasheed Boriss Yap, 2025</p>
+        </footer>
+
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Management</title>
+    
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <style>
+        /* 1. Sidebar Blue (Same as before) */
+        .sidebar-blue {
+            background-color: #009be5 !important;
+            color: white !important;
+        }
+
+        /* 2. Table Grid Styling */
+        .grid-table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        .grid-table th, .grid-table td {
+            border: 1px solid #999; /* Grey grid lines */
+            padding: 10px;
+            text-align: center;
+        }
+        /* Dark Blue Header for Table */
+        .grid-table th {
+            background-color: #3f51b5; /* w3-indigo match */
+            color: white;
+            font-weight: normal;
+        }
+
+        /* 3. Form Box Styling */
+        .form-box {
+            border: 3px solid #888; /* Thicker grey border like image */
+            padding: 20px;
+            height: 100%; /* Try to match height of table */
+        }
+    </style>
+</head>
+<body class="w3-white">
+
+    <div class="w3-bar w3-indigo w3-text-white w3-top" style="z-index:4">
+        <div class="w3-bar-item w3-large">Python(20420) 10:30 - 12:01 MW</div>
+    </div>
+
+    <div class="w3-sidebar w3-bar-block sidebar-blue" style="width:240px; top:43px; z-index:3;">
+        <div style="margin-top: 20px;"></div>
+        <a href="#" class="w3-bar-item w3-button w3-padding-16 w3-white w3-text-blue">USER MNGT</a>
+        <a href="#" class="w3-bar-item w3-button w3-padding-16">STUDENT MNGT</a>
+        <a href="#" class="w3-bar-item w3-button w3-padding-16">VIEW ATTENDANCE</a>
+        <a href="#" class="w3-bar-item w3-button w3-padding-16">LOGOUT</a>
+    </div>
+
+    <div style="margin-left: 240px; margin-top: 43px; padding: 20px;">
+
+        <h4 class="w3-text-grey" style="margin-bottom: 20px;">USER MANAGEMENT</h4>
+
+        <div class="w3-row-padding" style="margin: 0 -16px;">
+            
+            <div class="w3-col m4">
+                <div class="form-box">
+                    <form>
+                        <div class="w3-margin-bottom">
+                            <input class="w3-input w3-border" type="text" placeholder="email" style="padding: 10px;">
+                        </div>
+                        
+                        <div class="w3-margin-bottom">
+                            <input class="w3-input w3-border" type="password" placeholder="password" style="padding: 10px;">
+                        </div>
+
+                        <div class="w3-right-align" style="margin-top: 30px;">
+                            <button class="w3-button w3-indigo w3-text-white" style="width: 100px;">SAVE</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="w3-col m8">
+                <table class="grid-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>NAME</th>
+                            <th>EMAIL</th>
+                            <th>PASSWORD</th>
+                            <th>ACTION</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr style="height: 50px;">
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td style="width: 120px;">
+                                <button class="w3-button w3-white w3-border w3-border-grey w3-tiny"><i class="fa fa-pencil"></i></button>
+                                <button class="w3-button w3-white w3-border w3-border-grey w3-tiny"><i class="fa fa-trash"></i></button>
+                            </td>
+                        </tr>
+                        <tr style="height: 50px;">
+                            <td></td><td></td><td></td><td></td><td></td>
+                        </tr>
+                        <tr style="height: 50px;">
+                            <td></td><td></td><td></td><td></td><td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+
+        <footer class="w3-container w3-center" style="margin-top: 50px;">
+            <hr class="w3-border-grey">
+            <p class="w3-small w3-text-grey">Copyright © Jude Khalil Veloso, Rasheed Boriss Yap, 2025</p>
+        </footer>
+
+    </div>
+
+</body>
+</html>

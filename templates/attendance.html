@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <title>Attendance</title>
+    <style>
+        /* 1. Exact Sidebar Color from your image */
+        .sidebar-blue {
+            background-color: #009be5 !important; /* Matches the bright blue in image */
+            color: white !important;
+        }
+        
+        /* 2. Custom CSS to make the Table look like a Grid (Vertical Lines) */
+        .grid-table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        .grid-table th, .grid-table td {
+            border: 1px solid #999; /* Grey borders for all cells */
+            padding: 8px;
+            text-align: center; /* Center align all text */
+        }
+        .grid-table th {
+            font-weight: normal;
+            color: #666;
+            text-transform: uppercase;
+        }
+
+        /* 3. Button Hover Effect */
+        .btn-hover:hover {
+            opacity: 0.8;
+            cursor: pointer;
+        }
+        
+        /* Font sizing adjustments to match image */
+        .header-text { font-size: 18px; color: #777; }
+        .label-text { font-size: 14px; color: #777; margin-right: 5px; }
+    </style>
+</head>
+<body class="w3-white">
+
+    <div class="w3-bar w3-indigo w3-text-white w3-top" style="z-index:4">
+        <div class="w3-bar-item w3-large">Python(20420) 10:30 - 12:01 MW</div>
+    </div>
+
+    <div class="w3-sidebar w3-bar-block sidebar-blue" style="width:240px; top:43px; z-index:3;">
+        <div style="margin-top: 20px;"></div> <a href="#" class="w3-bar-item w3-button w3-padding-16">USER MNGT</a>
+        <a href="#" class="w3-bar-item w3-button w3-padding-16">STUDENT MNGT</a>
+        <a href="#" class="w3-bar-item w3-button w3-padding-16">VIEW ATTENDANCE</a>
+        <a href="#" class="w3-bar-item w3-button w3-padding-16">LOGOUT</a>
+    </div>
+
+    <div style="margin-left: 240px; margin-top: 43px; display: flex; flex-direction: column; min-height: 90vh;">
+        
+        <div class="w3-container" style="padding: 20px 30px;">
+
+            <div class="w3-row w3-margin-bottom" style="margin-top: 15px;">
+                
+                <div class="w3-col m5">
+                    <span class="header-text">VIEW ATTENDANCE</span>
+                </div>
+
+                <div class="w3-col m7 w3-right-align">
+                    <span class="label-text">SELECT DATE</span>
+                    <input type="text" class="w3-border" style="padding: 5px; width: 140px;">
+                    <button class="w3-button sidebar-blue btn-hover" style="padding: 6px 20px; margin-left: 5px;">GO</button>
+                </div>
+            </div>
+
+            <table class="grid-table w3-white">
+                <tr>
+                    <th style="width: 50px;">#</th>
+                    <th>IDNO</th>
+                    <th>LASTNAME</th>
+                    <th>FIRSTNAME</th>
+                    <th>COURSE &nbsp; LEVEL</th> 
+                    <th>TIME-IN</th>
+                </tr>
+                <tr style="height: 40px;"><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+                <tr style="height: 40px;"><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+                <tr style="height: 40px;"><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+                <tr style="height: 40px;"><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+                <tr style="height: 40px;"><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+            </table>
+
+        </div>
+
+        <footer class="w3-container w3-center" style="margin-top: auto; padding: 20px;">
+            <hr class="w3-border-grey" style="margin-bottom: 20px;">
+            <p class="w3-small w3-text-grey">Copyright © Jude Khalil Veloso, Rasheed Boriss Yap, 2025</p>
+        </footer>
+
+    </div>
+
+</body>
+</html>
