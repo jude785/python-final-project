@@ -1,6 +1,7 @@
 import sqlite3
 from datetime import datetime
 import os
+from werkzeug.security import generate_password_hash, check_password_hash
 
 DB_PATH = 'attendance.db'
 
@@ -23,8 +24,13 @@ def init_db():
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         student_id TEXT UNIQUE NOT NULL,
         name TEXT NOT NULL,
+        last_name TEXT,
+        first_name TEXT,
         email TEXT UNIQUE NOT NULL,
         qr_code TEXT UNIQUE,
+        course TEXT,
+        level TEXT,
+        photo TEXT,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )''')
     
@@ -62,16 +68,42 @@ def init_db():
     
     conn.commit()
     conn.close()
+    ensure_default_course()
     print("Database initialized successfully!")
+
+
+def ensure_default_course():
+    """Guarantee there is at least one default course; return its id."""
+    conn = sqlite3.connect(DB_PATH)
+    c = conn.cursor()
+    c.execute(
+        'SELECT id FROM courses WHERE course_code = ? LIMIT 1',
+        ('PY20420',)
+    )
+    row = c.fetchone()
+    if row:
+        conn.close()
+        return row[0]
+
+    c.execute(
+        '''INSERT INTO courses (course_code, course_name, instructor, time_slot)
+           VALUES (?, ?, ?, ?)''',
+        ('PY20420', 'Python (20420)', 'Auto-Generated', '10:30 - 12:01 MW')
+    )
+    conn.commit()
+    course_id = c.lastrowid
+    conn.close()
+    return course_id
 
 # Admin functions
 def add_admin(email, password, name):
-    """Add a new admin user."""
+    """Add a new admin user; stores a hashed password."""
     conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
+    hashed = generate_password_hash(password)
     try:
         c.execute('INSERT INTO admins (email, password, name) VALUES (?, ?, ?)',
-                  (email, password, name))
+                  (email, hashed, name))
         conn.commit()
         return True
     except sqlite3.IntegrityError:
@@ -80,14 +112,81 @@ def add_admin(email, password, name):
         conn.close()
 
 def get_admin(email, password):
-    """Verify admin login credentials."""
+    """Verify admin login credentials with hashed passwords; auto-upgrade plaintext rows."""
     conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
-    c.execute('SELECT id, name, email FROM admins WHERE email = ? AND password = ?',
-              (email, password))
-    admin = c.fetchone()
+    c.execute('SELECT id, name, email, password FROM admins WHERE email = ?', (email,))
+    row = c.fetchone()
+    if not row:
+        conn.close()
+        return None
+
+    admin_id, name, email_val, stored = row
+    valid = False
+    if stored:
+        try:
+            valid = check_password_hash(stored, password)
+        except ValueError:
+            # Stored value is not a hash; fall through to plaintext compare
+            valid = stored == password
+    if not valid and stored == password:
+        valid = True
+
+    if valid and stored == password:
+        # Upgrade plaintext to hashed
+        try:
+            new_hash = generate_password_hash(password)
+            c.execute('UPDATE admins SET password = ? WHERE id = ?', (new_hash, admin_id))
+            conn.commit()
+        except Exception:
+            pass
+
     conn.close()
-    return admin
+    return (admin_id, name, email_val) if valid else None
+
+def get_all_admins():
+    """Get all admin users."""
+    conn = sqlite3.connect(DB_PATH)
+    c = conn.cursor()
+    c.execute('SELECT id, name, email, password FROM admins ORDER BY id ASC')
+    rows = c.fetchall()
+    conn.close()
+    return rows
+
+def delete_admin(admin_id):
+    """Delete an admin user by ID."""
+    conn = sqlite3.connect(DB_PATH)
+    c = conn.cursor()
+    c.execute('DELETE FROM admins WHERE id = ?', (admin_id,))
+    conn.commit()
+    conn.close()
+    return True
+
+def get_admin_by_id(admin_id):
+    """Get a single admin by ID."""
+    conn = sqlite3.connect(DB_PATH)
+    c = conn.cursor()
+    c.execute('SELECT id, name, email, password FROM admins WHERE id = ?', (admin_id,))
+    row = c.fetchone()
+    conn.close()
+    return row
+
+def update_admin(admin_id, name, email, password=None):
+    """Update an admin user. If password is provided, hash and update it."""
+    conn = sqlite3.connect(DB_PATH)
+    c = conn.cursor()
+    
+    if password:
+        hashed = generate_password_hash(password)
+        c.execute('UPDATE admins SET name = ?, email = ?, password = ? WHERE id = ?',
+                  (name, email, hashed, admin_id))
+    else:
+        c.execute('UPDATE admins SET name = ?, email = ? WHERE id = ?',
+                  (name, email, admin_id))
+    
+    conn.commit()
+    conn.close()
+    return True
 
 # Student functions
 def add_student(student_id, name, email, qr_code=None):
@@ -104,20 +203,11 @@ def add_student(student_id, name, email, qr_code=None):
     finally:
         conn.close()
 
-def get_all_students():
-    """Get all students."""
-    conn = sqlite3.connect(DB_PATH)
-    c = conn.cursor()
-    c.execute('SELECT id, student_id, name, email, qr_code FROM students')
-    students = c.fetchall()
-    conn.close()
-    return students
-
 def get_student_by_qr(qr_code):
-    """Get student by QR code."""
+    """Get student by QR code or student_id fallback."""
     conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
-    c.execute('SELECT id, student_id, name, email FROM students WHERE qr_code = ?', (qr_code,))
+    c.execute('SELECT id, student_id, name, email FROM students WHERE qr_code = ? OR student_id = ? LIMIT 1', (qr_code, qr_code))
     student = c.fetchone()
     conn.close()
     return student

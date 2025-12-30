@@ -17,12 +17,27 @@
                 display: inline-block;
                 background: white;
             }
+
             #qr-reader {
-                width: 100%;
-                height: 100%;
+                width: 70%;
+                height: 70%;
             }
-            .page-wrap { min-height: 80vh; }
+
+            body {
+                display: flex;
+                flex-direction: column;
+                min-height: 100vh;
+            }
+            .page-wrap { flex: 1; min-height: 80vh; }
             .page-footer { padding-top: 18px; padding-bottom: 18px; }
+
+            /* Force webcam to be non-mirrored (same as student.html) */
+            #qr-reader video,
+            #qr-reader .html5-qrcode-video,
+            .html5-qrcode-video {
+                transform: scaleX(-1) !important;
+                -webkit-transform: scaleX(-1) !important;
+            }
         </style>
     </head>
     <body class="w3-white">
@@ -50,36 +65,63 @@
 
         <script>
             // Initialize QR Code Scanner
-            const html5QrcodeScanner = new Html5QrcodeScanner(
-                "qr-reader",
-                { fps: 10, qrbox: 250 },
-                false
-            );
+            const qr = new Html5Qrcode("qr-reader");
+            let scanning = false;
 
-            html5QrcodeScanner.render(onScanSuccess, onScanFailure);
+            function fixMirror() {
+                // If the camera is mirrored by the browser, flip it back manually
+                const elements = document.querySelectorAll('#qr-reader video, #qr-reader canvas');
+                elements.forEach(el => {
+                    el.classList.remove('mirrored', 'mirror');
+                    // Flip horizontally to counter browser mirroring
+                    el.style.transform = 'scaleX(-1)';
+                    el.style.webkitTransform = 'scaleX(-1)';
+                });
+            }
+
+            // Run fixMirror more frequently
+            const obs = new MutationObserver(() => {
+                fixMirror();
+                setTimeout(fixMirror, 100);
+            });
+            obs.observe(document.getElementById('qr-reader'), { childList: true, subtree: true, attributes: true, attributeFilter: ['style', 'class'] });
+
+            function startDefault() {
+                if (scanning) return;
+                scanning = true;
+                // Try rear camera first (never mirrored)
+                qr.start(
+                    { facingMode: { exact: "environment" } },
+                    { fps: 10, qrbox: 250, disableFlip: true },
+                    onScanSuccess,
+                    onScanFailure
+                ).then(() => {
+                    fixMirror();
+                    setTimeout(fixMirror, 200);
+                    setTimeout(fixMirror, 500);
+                })
+                 .catch(async () => {
+                    // Fallback to front camera
+                    await qr.start(
+                        { facingMode: "user" },
+                        { fps: 10, qrbox: 250, disableFlip: true },
+                        onScanSuccess,
+                        onScanFailure
+                    );
+                    fixMirror();
+                    setTimeout(fixMirror, 200);
+                    setTimeout(fixMirror, 500);
+                });
+            }
+            startDefault();
 
             function onScanSuccess(decodedText, decodedResult) {
                 console.log(`QR Code detected: ${decodedText}`);
-                // You can process the scanned QR code here
-                // For example, send it to your Flask backend
-                fetch('/scan-qr', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ qr_code: decodedText })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    console.log('Server response:', data);
-                    // Handle the response from your backend
-                })
-                .catch(error => console.error('Error:', error));
+                // Redirect to check.html with QR code data
+                window.location.href = `/check?qr_code=${encodeURIComponent(decodedText)}`;
             }
 
-            function onScanFailure(error) {
-                // Handle errors gracefully (optional)
-            }
+            function onScanFailure(error) {}
         </script>
 
     </body>

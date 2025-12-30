@@ -23,9 +23,18 @@
             text-align: center; /* Center align all text */
         }
         .grid-table th {
+            border: 1px solid #999;
+            padding: 8px;
+            text-align: center;
             font-weight: normal;
             color: #666;
             text-transform: uppercase;
+        }
+
+        .grid-table thead th {
+            background: #3f51b5;
+            color: white;
+            font-weight: bold;
         }
 
         /* 3. Button Hover Effect */
@@ -37,6 +46,12 @@
         /* Font sizing adjustments to match image */
         .header-text { font-size: 18px; color: #777; }
         .label-text { font-size: 14px; color: #777; margin-right: 5px; }
+
+        thead th {
+            background: #3f51b5;
+            color: white;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body class="w3-white">
@@ -46,50 +61,63 @@
     </div>
 
     <div class="w3-sidebar w3-bar-block sidebar-blue" style="width:240px; top:43px; z-index:3;">
-        <div style="margin-top: 20px;"></div> <a href="#" class="w3-bar-item w3-button w3-padding-16">USER MNGT</a>
-        <a href="#" class="w3-bar-item w3-button w3-padding-16">STUDENT MNGT</a>
-        <a href="#" class="w3-bar-item w3-button w3-padding-16">VIEW ATTENDANCE</a>
-        <a href="#" class="w3-bar-item w3-button w3-padding-16">LOGOUT</a>
+        <div style="margin-top: 20px;"></div> 
+        <a href="/admin" class="w3-bar-item w3-button w3-padding-16">USER MANAGEMENT</a>
+        <a href="/studentmngt" class="w3-bar-item w3-button w3-padding-16">STUDENT MANAGEMENT</a>
+        <a href="/attendance" class="w3-bar-item w3-button w3-padding-16 w3-white w3-text-blue">VIEW ATTENDANCE</a>
+        <a href="/logout" class="w3-bar-item w3-button w3-padding-16">LOGOUT</a>
     </div>
 
-    <div style="margin-left: 240px; margin-top: 43px; display: flex; flex-direction: column; min-height: 90vh;">
+    <div style="margin-left: 240px; margin-top: 43px; display: flex; flex-direction: column; min-height: 100vh;">
         
         <div class="w3-container" style="padding: 20px 30px;">
 
             <div class="w3-row w3-margin-bottom" style="margin-top: 15px;">
                 
                 <div class="w3-col m5">
-                    <span class="header-text">VIEW ATTENDANCE</span>
+                    <span class="header-text w3-text-black">VIEW ATTENDANCE</span>
                 </div>
 
                 <div class="w3-col m7 w3-right-align">
-                    <span class="label-text">SELECT DATE</span>
-                    <input type="text" class="w3-border" style="padding: 5px; width: 140px;">
-                    <button class="w3-button sidebar-blue btn-hover" style="padding: 6px 20px; margin-left: 5px;">GO</button>
+                    <form action="/attendance" method="get" style="display: inline-flex; align-items: center; gap: 6px;">
+                        <span class="label-text">SELECT DATE</span>
+                        <input name="date" type="date" class="w3-border" style="padding: 5px; width: 160px;" value="{{ selected_date }}">
+                        <button type="submit" class="w3-button sidebar-blue btn-hover" style="padding: 6px 20px;">GO</button>
+                    </form>
                 </div>
             </div>
 
             <table class="grid-table w3-white">
-                <tr>
-                    <th style="width: 50px;">#</th>
-                    <th>IDNO</th>
-                    <th>LASTNAME</th>
-                    <th>FIRSTNAME</th>
-                    <th>COURSE &nbsp; LEVEL</th> 
-                    <th>TIME-IN</th>
-                </tr>
-                <tr style="height: 40px;"><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-                <tr style="height: 40px;"><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-                <tr style="height: 40px;"><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-                <tr style="height: 40px;"><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-                <tr style="height: 40px;"><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+                <thead>
+                    <tr>
+                        <th style="width: 50px;">#</th>
+                        <th>IDNO</th>
+                        <th>LASTNAME</th>
+                        <th>FIRSTNAME</th>
+                        <th>COURSE &nbsp; LEVEL</th> 
+                        <th>DATE</th>
+                        <th>TIME-IN</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for record in attendance_records %}
+                    <tr style="height: 40px;">
+                        <td>{{ loop.index }}</td>
+                        <td>{{ record.student_id }}</td>
+                        <td>{{ record.last_name }}</td>
+                        <td>{{ record.first_name }}</td>
+                        <td>{{ record.course }} {{ record.level }}</td>
+                        <td>{{ record.date_in }}</td>
+                        <td>{{ record.time_in }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
             </table>
-
         </div>
 
-        <footer class="w3-container w3-center" style="margin-top: auto; padding: 20px;">
-            <hr class="w3-border-grey" style="margin-bottom: 20px;">
-            <p class="w3-small w3-text-grey">Copyright © Jude Khalil Veloso, Rasheed Boriss Yap, 2025</p>
+        <footer class="w3-container w3-center" style="margin-top: auto; padding: 15px;">
+            <hr class="w3-border-grey">
+            <p class="w3-small w3-text-grey">Jude Khalil Veloso, Rasheed Boriss Yap, 2025</p>
         </footer>
 
     </div>

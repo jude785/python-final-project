@@ -9,14 +9,23 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
     <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .page-body {
+            flex: 1;
+        }
+
         /* Custom Styles to match the screenshot */
-        
         /* The main outer boxes */
         .content-box {
-            border: 2px solid #333; /* Thicker dark border */
+            border: 2px solid #333;
             padding: 20px;
-            height: 500px; /* Fixed height to match side-by-side look */
-            position: relative; /* For absolute positioning of buttons */
+            height: 550px;
+            position: relative;
             background-color: white;
         }
 
@@ -42,7 +51,7 @@
         }
         .input-group input {
             border: 2px solid #999;
-            border-right: none; /* Remove right border to merge with button */
+            border-right: none;
             padding: 8px;
             width: 100%;
         }
@@ -60,13 +69,13 @@
             margin-top: 20px;
         }
         .info-table td {
-            border: 2px solid #333; /* Dark grid lines */
+            border: 2px solid #333;
             padding: 12px;
             font-weight: bold;
             font-size: 14px;
         }
-        .label-col { width: 35%; } /* Width for IDNO, LASTNAME, etc */
-        .value-col { width: 65%; } /* Width for the empty values */
+        .label-col { width: 35%; }
+        .value-col { width: 65%; }
 
         /* Blue Buttons (SNAP / SAVE) */
         .action-button {
@@ -75,10 +84,49 @@
             padding: 10px 40px;
             font-weight: bold;
             border: none;
+            cursor: pointer;
+        }
+        /* Secondary (Cancel) */
+        .action-button.secondary {
+            background-color: #ccc;
+            color: #333;
+        }
+        
+        /* Button container to position at bottom */
+        .button-container {
             position: absolute;
             bottom: 20px;
             right: 20px;
-            cursor: pointer;
+        }
+
+        .cam-row { display: flex; gap: 16px; align-items: center; justify-content: center; }
+        .cam-col { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+        .qr-box {
+            width: 150px;
+            height: 150px;
+            border: 2px solid #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .avatar-qr-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 24px;
+            margin-bottom: 16px;
+        }
+        .snap-img {
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            border: 2px solid #333;
+        }
+
+        /* Force webcam preview to be non-mirrored (unflip front camera feed) */
+        #webcam {
+            transform: scaleX(-1) !important;
+            -webkit-transform: scaleX(-1) !important;
         }
     </style>
 </head>
@@ -88,82 +136,255 @@
         <div class="w3-large">Python(20420) 10:30 - 12:01 MW</div>
     </div>
 
-    <div class="w3-container" style="padding: 40px 50px;">
-        
-        <div class="w3-row-padding">
+    <div class="page-body">
+        <div class="w3-container" style="padding: 40px 50px;">
             
-            <div class="w3-half">
-                <div class="content-box">
-                    
-                    <div class="w3-center w3-margin-bottom">
-                        <i class="fa fa-user-circle user-icon-large"></i>
-                    </div>
-
-                    <input class="custom-input" type="text" placeholder="IDNO">
-                    <input class="custom-input" type="text" placeholder="LASTNAME">
-                    <input class="custom-input" type="text" placeholder="FIRSTNAME">
-
-                    <div class="input-group">
-                        <input type="text" placeholder="COURSE">
-                        <div class="icon-box"><i class="fa fa-arrow-down"></i></div>
-                    </div>
-                    
-                    <div class="input-group">
-                        <input type="text" placeholder="LEVEL">
-                        <div class="icon-box"><i class="fa fa-arrow-down"></i></div>
-                    </div>
-
-                    <button class="action-button">SNAP</button>
-
-                </div>
-            </div>
-
-            <div class="w3-half">
-                <div class="content-box">
-                    
-                    <div class="w3-center w3-margin-bottom">
-                        <i class="fa fa-user-circle user-icon-large"></i>
-                    </div>
-
-                    <div class="w3-center" style="height: 60px;">
+            <div class="w3-row-padding">
+                
+                <div class="w3-half">
+                    <div class="content-box">
+                        
+                        <div class="w3-center w3-margin-bottom">
+                            <video id="webcam" autoplay style="width: 100%; max-width: 280px; height: 180px; border: 2px solid #333;"></video>
                         </div>
 
-                    <table class="info-table">
-                        <tr>
-                            <td class="label-col">IDNO</td>
-                            <td class="value-col"></td>
-                        </tr>
-                        <tr>
-                            <td class="label-col">LASTNAME</td>
-                            <td class="value-col"></td>
-                        </tr>
-                        <tr>
-                            <td class="label-col">FIRSTNAME</td>
-                            <td class="value-col"></td>
-                        </tr>
-                        <tr>
-                            <td class="label-col">COURSE</td>
-                            <td class="value-col"></td>
-                        </tr>
-                        <tr>
-                            <td class="label-col">LEVEL</td>
-                            <td class="value-col"></td>
-                        </tr>
-                    </table>
+                        <input id="idno" class="custom-input" type="text" placeholder="IDNO">
+                        <input id="lastname" class="custom-input" type="text" placeholder="LASTNAME">
+                        <input id="firstname" class="custom-input" type="text" placeholder="FIRSTNAME">
 
-                    <button class="action-button">SAVE</button>
+                        <select id="course" class="custom-input">
+                            <option value="">Select course</option>
+                            <option value="BSIT">BSIT - Information Technology</option>
+                            <option value="BSCS">BSCS - Computer Science</option>
+                            <option value="BSCRIM">BSCRIM - Criminology</option>
+                        </select>
 
+                        <select id="level" class="custom-input">
+                            <option value="">Select level</option>
+                            <option value="1st Year">1st Year</option>
+                            <option value="2nd Year">2nd Year</option>
+                            <option value="3rd Year">3rd Year</option>
+                            <option value="4th Year">4th Year</option>
+                        </select>
+
+                        <div class="w3-center" style="margin-top: -5px;">
+                            <button id="snapBtn" class="action-button">SNAP</button>
+                        </div>
+
+                    </div>
                 </div>
+
+                <div class="w3-half">
+                    <div class="content-box">
+                        
+                        <div class="avatar-qr-row">
+                            <img id="snapPreview" class="snap-img" alt="Snapshot"
+                                 src="data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='150' height='150' viewBox='0 0 200 200'%3E%3Crect width='100%25' height='100%25' fill='%23e9ecef'/%3E%3Ccircle cx='100' cy='70' r='35' fill='%2399a2ad'/%3E%3Cpath d='M30 170c0-30 30-55 70-55s70 25 70 55' fill='%2399a2ad'/%3E%3C/svg%3E">
+                            <div id="qrContainer" class="qr-box">QR</div>
+                        </div>
+
+                        <table class="info-table">
+                            <tr>
+                                <td class="label-col">IDNO</td>
+                                <td class="value-col" id="val-idno"></td>
+                            </tr>
+                            <tr>
+                                <td class="label-col">LASTNAME</td>
+                                <td class="value-col" id="val-lname"></td>
+                            </tr>
+                            <tr>
+                                <td class="label-col">FIRSTNAME</td>
+                                <td class="value-col" id="val-fname"></td>
+                            </tr>
+                            <tr>
+                                <td class="label-col">COURSE</td>
+                                <td class="value-col" id="val-course"></td>
+                            </tr>
+                            <tr>
+                                <td class="label-col">LEVEL</td>
+                                <td class="value-col" id="val-level"></td>
+                            </tr>
+                        </table>
+
+                        <div class="w3-center" style="margin-top: 20px;">
+                            <button id="saveBtn" class="action-button" style="margin-right: 10px;">SAVE</button>
+                            <button id="cancelBtn" class="action-button secondary">CANCEL</button>
+                        </div>
+
+                    </div>
+                </div>
+
             </div>
 
         </div>
-
     </div>
 
     <footer class="w3-container w3-center" style="margin-top: 20px;">
         <hr class="w3-border-grey" style="margin: 0 50px 20px 50px;">
-        <p class="w3-small w3-text-grey">Copyright © Jude Khalil B Veloso, Rasheed Borris Yap, 2025</p>
+        <p class="w3-small w3-text-grey">Jude Khalil B Veloso, Rasheed Borris Yap, 2025</p>
     </footer>
+
+    <!-- Add QRCode library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+    <script>
+        // Determine if we are in update mode
+        const urlParams = new URLSearchParams(window.location.search);
+        const mode = urlParams.get('mode') || 'create';
+        const updateId = urlParams.get('id');
+
+        // Access webcam (prefer rear camera if available; falls back gracefully)
+        const video = document.getElementById('webcam');
+        navigator.mediaDevices.getUserMedia({
+            video: { facingMode: { ideal: "environment" } }
+        })
+        .then(stream => { video.srcObject = stream; })
+        .catch(err => {
+            console.error("Error accessing webcam:", err);
+            alert("Unable to access webcam");
+        });
+
+        const qrContainer = document.getElementById('qrContainer');
+        const snapPreview = document.getElementById('snapPreview');
+        let qrInstance = null;
+
+        const valId = document.getElementById('val-idno');
+        const valLn = document.getElementById('val-lname');
+        const valFn = document.getElementById('val-fname');
+        const valCourse = document.getElementById('val-course');
+        const valLevel = document.getElementById('val-level');
+
+        document.getElementById('snapBtn').addEventListener('click', () => {
+            const idno = document.getElementById('idno').value.trim();
+            const lname = document.getElementById('lastname').value.trim();
+            const fname = document.getElementById('firstname').value.trim();
+            const course = document.getElementById('course').value.trim();
+            const level = document.getElementById('level').value.trim();
+
+            if (!idno) {
+                alert('Please enter IDNO before snapping.');
+                return;
+            }
+
+            // Update table display
+            valId.textContent = idno;
+            valLn.textContent = lname;
+            valFn.textContent = fname;
+            valCourse.textContent = course;
+            valLevel.textContent = level;
+
+            // Capture webcam frame to image, applying the same horizontal unflip
+            const canvas = document.createElement('canvas');
+            canvas.width = video.videoWidth || 280;
+            canvas.height = video.videoHeight || 180;
+            const ctx = canvas.getContext('2d');
+
+            // Flip horizontally to counter the preview transform
+            ctx.translate(canvas.width, 0);
+            ctx.scale(-1, 1);
+            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+            snapPreview.src = canvas.toDataURL('image/png');
+
+            const payload = JSON.stringify({ idno, lname, fname, course, level });
+
+            // Clear previous QR
+            qrContainer.innerHTML = '';
+            if (qrInstance) qrInstance.clear();
+
+            qrInstance = new QRCode(qrContainer, {
+                text: payload,
+                width: 140,
+                height: 140,
+                correctLevel: QRCode.CorrectLevel.M
+            });
+        });
+
+        // Save/Update depending on mode
+        document.getElementById('saveBtn').addEventListener('click', async () => {
+            const photoSrc = document.getElementById('snapPreview')?.src || '';
+            // Only include photo if it's actual data (starts with 'data:' and is not the default silhouette)
+            const silhouetteSvg = "data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='150' height='150' viewBox='0 0 200 200'%3E%3Crect width='100%25' height='100%25' fill='%23e9ecef'/%3E%3Ccircle cx='100' cy='70' r='35' fill='%2399a2ad'/%3E%3Cpath d='M30 170c0-30 30-55 70-55s70 25 70 55' fill='%2399a2ad'/%3E%3C/svg%3E";
+            const photoToSend = (photoSrc && photoSrc !== silhouetteSvg) ? photoSrc : '';
+            
+            const payload = {
+                idno: document.getElementById('idno').value.trim(),
+                lastname: document.getElementById('lastname').value.trim(),
+                firstname: document.getElementById('firstname').value.trim(),
+                course: document.getElementById('course').value.trim(),
+                level: document.getElementById('level').value.trim(),
+                photo: photoToSend
+            };
+            if (!payload.idno) return alert('Please enter IDNO before saving.');
+
+            const isUpdate = (mode === 'update' && updateId);
+            const endpoint = isUpdate ? `/students/${encodeURIComponent(updateId)}` : '/students';
+            const method = isUpdate ? 'PUT' : 'POST';
+
+            const res = await fetch(endpoint, {
+                method,
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+            if (res.status === 401) {
+                alert('Session expired. Please log in again.');
+                window.location.href = '/login';
+                return;
+            }
+            if (!res.ok) {
+                const txt = await res.text();
+                alert((isUpdate ? 'Update' : 'Save') + ' failed: ' + txt);
+                return;
+            }
+            const data = await res.json();
+            if (!data.success) return alert(data.message || (isUpdate ? 'Update failed.' : 'Save failed.'));
+            window.location.href = '/studentmngt?idno=' + encodeURIComponent(payload.idno);
+        });
+
+        document.getElementById('cancelBtn').addEventListener('click', () => {
+            if (mode === 'update') {
+                window.location.href = '/studentmngt';
+            } else {
+                window.location.href = '/admin';
+            }
+        });
+
+        // Prefill if updating
+        async function prefillForUpdate() {
+            if (mode !== 'update' || !updateId) return;
+            document.getElementById('saveBtn').textContent = 'UPDATE';
+            try {
+                const r = await fetch(`/students/${encodeURIComponent(updateId)}`);
+                if (r.status === 401) { window.location.href = '/login'; return; }
+                const data = await r.json();
+                if (!data.success) return alert(data.message || 'Failed to load student');
+                const s = data.student;
+                document.getElementById('idno').value = s.student_id || '';
+                document.getElementById('lastname').value = s.last_name || '';
+                document.getElementById('firstname').value = s.first_name || '';
+                document.getElementById('course').value = s.course || '';
+                document.getElementById('level').value = s.level || '';
+                // If photo is a filename, construct the URL; otherwise use as-is
+                if (s.photo) {
+                    if (s.photo.startsWith('data:') || s.photo.startsWith('http')) {
+                        document.getElementById('snapPreview').src = s.photo;
+                    } else {
+                        document.getElementById('snapPreview').src = `/static/photos/${encodeURIComponent(s.photo)}`;
+                    }
+                }
+                document.getElementById('val-idno').textContent = s.student_id || '';
+                document.getElementById('val-lname').textContent = s.last_name || '';
+                document.getElementById('val-fname').textContent = s.first_name || '';
+                document.getElementById('val-course').textContent = s.course || '';
+                document.getElementById('val-level').textContent = s.level || '';
+                document.getElementById('qrContainer').innerHTML = 'QR';
+            } catch (e) {
+                alert('Failed to load student: ' + e.message);
+            }
+        }
+
+        prefillForUpdate();
+    </script>
 
 </body>
 </html>

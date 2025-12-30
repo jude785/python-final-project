@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Edit User</title>
+    <link rel="stylesheet" href="/static/css/w3.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+        body { display: flex; flex-direction: column; min-height: 100vh; }
+        .page-wrap { flex: 1; }
+        .container { max-width: 720px; margin: 40px auto; }
+        .form-row { margin-bottom: 12px; }
+    </style>
+</head>
+<body class="w3-light-grey">
+<div class="page-wrap">
+<div class="container w3-card w3-white w3-padding">
+    <h3 class="w3-margin-bottom">Edit Admin #{{ user.id }}</h3>
+    <form method="POST" action="/admin/users/{{ user.id }}/edit">
+        <div class="form-row">
+            <label class="w3-small">Name</label>
+            <input class="w3-input w3-border" type="text" name="name" value="{{ user.name }}" required>
+        </div>
+        <div class="form-row">
+            <label class="w3-small">Email</label>
+            <input class="w3-input w3-border" type="email" name="email" value="{{ user.email }}" required>
+        </div>
+        <div class="form-row">
+            <label class="w3-small">Password</label>
+            <input class="w3-input w3-border" type="text" name="password" value="{{ user.password }}" required>
+        </div>
+        <div class="w3-margin-top" style="display:flex; gap:8px;">
+            <button class="w3-button w3-indigo w3-text-white">Save</button>
+            <a class="w3-button w3-white w3-border" href="/admin">Cancel</a>
+        </div>
+    </form>
+</div>
+</div>
+<footer style="text-align: center; padding: 20px; margin-top: auto;">
+        <hr class="w3-border-grey">
+        <p class="w3-small w3-text-grey">Jude Khalil Veloso, Rasheed Boriss Yap, 2025</p>
+    </footer>
+</body>
+</html>

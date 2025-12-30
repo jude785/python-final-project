@@ -9,6 +9,18 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
     <style>
+        /* Page layout to keep footer at the bottom */
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        .page-wrap {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+        }
+
         /* Custom Indigo to match the header */
         .header-blue {
             background-color: #3f51b5 !important;
@@ -71,36 +83,68 @@
         <div class="w3-large">Python(20420) 10:30 - 12:01 MW</div>
     </div>
 
+    <div class="page-wrap">
     <div class="profile-container">
         
+        {% if student and student.photo %}
+        <div style="margin-bottom: 20px;">
+            {% if student.photo.startswith('data:') %}
+                <img src="{{ student.photo }}" alt="Student Photo" style="width: 120px; height: 120px; object-fit: cover; border: 3px solid #222; border-radius: 0;">
+            {% else %}
+                <img src="{{ url_for('static', filename='photos/' + student.photo) }}" alt="Student Photo" style="width: 120px; height: 120px; object-fit: cover; border: 3px solid #222; border-radius: 0;">
+            {% endif %}
+        </div>
+        {% else %}
         <div class="user-icon-circle">
             <i class="fa fa-user"></i>
         </div>
+        {% endif %}
 
         <table class="profile-table">
             <tr>
                 <td class="label-col">IDNO</td>
-                <td class="value-col"></td> </tr>
+                <td class="value-col">{% if student %}{{ student.student_id }}{% endif %}</td>
+            </tr>
             <tr>
                 <td class="label-col">LASTNAME</td>
-                <td class="value-col"></td> </tr>
+                <td class="value-col">{% if student %}{{ student.last_name }}{% endif %}</td>
+            </tr>
             <tr>
                 <td class="label-col">FIRSTNAME</td>
-                <td class="value-col"></td> </tr>
+                <td class="value-col">{% if student %}{{ student.first_name }}{% endif %}</td>
+            </tr>
             <tr>
                 <td class="label-col">COURSE</td>
-                <td class="value-col"></td> </tr>
+                <td class="value-col">{% if student %}{{ student.course }}{% endif %}</td>
+            </tr>
             <tr>
                 <td class="label-col">LEVEL</td>
-                <td class="value-col"></td> </tr>
+                <td class="value-col">{% if student %}{{ student.level }}{% endif %}</td>
+            </tr>
         </table>
+        
+        {% if error %}
+        <div class="w3-panel w3-red w3-margin-top">
+            <p>{{ error }}</p>
+        </div>
+        {% endif %}
 
     </div>
+    </div>
 
-    <footer class="w3-container w3-center" style="margin-top: 50px;">
+    <footer class="w3-container w3-center">
         <hr class="w3-border-grey" style="margin: 0 20px 20px 20px;">
-        <p class="w3-small w3-text-grey">Copyright © Jude Khalil Veloso, Rasheed Boriss Yap, 2025</p>
+        <p class="w3-small w3-text-grey">Jude Khalil Veloso, Rasheed Boriss Yap, 2025</p>
     </footer>
+
+    {% if student %}
+    <script>
+        // Redirect back to index after 3 seconds if student data is shown
+        setTimeout(function() {
+            window.location.href = '/';
+        }, 3000);
+    </script>
+    {% endif %}
 
 </body>
 </html>

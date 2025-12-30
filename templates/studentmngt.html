@@ -10,6 +10,11 @@
 
     <style>
         /* --- Same Styles as Previous Pages --- */
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
         .sidebar-blue {
             background-color: #009be5 !important;
             color: white !important;
@@ -27,8 +32,8 @@
         }
         /* Header style for this specific table (Light Grey) */
         .student-table-header {
-            background-color: #f1f1f1;
-            color: #666;
+            background-color:#3f51b5;
+            color: white;
             font-weight: bold;
         }
 
@@ -38,9 +43,36 @@
             border: 1px solid #ccc;
             padding: 20px;
             background-color: #fff;
-            height: 100%; /* Try to fill height */
+            height: 100%;
         }
-        
+        .preview-row {
+            display: none; /* hidden until Edit is clicked */
+            justify-content: center;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+        .qr-prev, .photo-prev {
+            width: 120px;
+            height: 120px;
+            border: 1px solid #ccc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #fafafa;
+        }
+        .qr-prev > img, .qr-prev > canvas {
+            width: 110px;
+            height: 110px;
+        }
+        .photo-prev {
+            overflow: hidden;
+        }
+        .photo-prev img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
         /* Underlined input fields */
         .underlined-input {
             border: none;
@@ -53,6 +85,13 @@
         }
         .underlined-input:focus {
             border-bottom: 2px solid #009be5;
+        }
+
+        /* Non-editable default UX for management form */
+        #editIdno[readonly], #editLastname[readonly], #editFirstname[readonly],
+        #editCourse[disabled], #editLevel[disabled] {
+            cursor: not-allowed;
+            background-color: #f7f7f7;
         }
 
         /* Action buttons in the table */
@@ -74,13 +113,13 @@
 
     <div class="w3-sidebar w3-bar-block sidebar-blue" style="width:240px; top:43px; z-index:3;">
         <div style="margin-top: 20px;"></div>
-        <a href="#" class="w3-bar-item w3-button w3-padding-16">USER MNGT</a>
-        <a href="#" class="w3-bar-item w3-button w3-padding-16 w3-white w3-text-blue">STUDENT MNGT</a>
-        <a href="#" class="w3-bar-item w3-button w3-padding-16">VIEW ATTENDANCE</a>
-        <a href="#" class="w3-bar-item w3-button w3-padding-16">LOGOUT</a>
+        <a href="/admin" class="w3-bar-item w3-button w3-padding-16">USER MANAGEMENT</a>
+        <a href="/studentmngt" class="w3-bar-item w3-button w3-padding-16 w3-white w3-text-blue">STUDENT MANAGEMENT</a>
+        <a href="/attendance" class="w3-bar-item w3-button w3-padding-16">VIEW ATTENDANCE</a>
+        <a href="/logout" class="w3-bar-item w3-button w3-padding-16">LOGOUT</a>
     </div>
 
-    <div class="w3-main" style="margin-left: 240px; margin-top: 43px;">
+    <div class="w3-main" style="margin-left: 240px; margin-top: 43px; flex: 1; display: flex; flex-direction: column;">
         
         <div class="w3-container" style="padding: 20px;">
             
@@ -89,7 +128,7 @@
                     <h4 style="margin:0;">STUDENT MANAGEMENT</h4>
                 </div>
                 <div class="w3-col m6 w3-right-align">
-                    <button class="w3-button sidebar-blue" style="padding: 6px 20px;">+ADD</button>
+                    <a href="/student" class="w3-button sidebar-blue" style="padding: 6px 20px; text-decoration: none;">+ADD</a>
                 </div>
             </div>
 
@@ -97,22 +136,49 @@
                 
                 <div class="w3-col l4 m5">
                     <div class="student-form-box">
-                        <div class="w3-center" style="margin-bottom: 20px;">
-                            <i class="fa fa-user-circle-o w3-text-grey" style="font-size: 60px;"></i>
+                        <div class="preview-row">
+                            <div class="photo-prev">
+                                <img id="photoPreview" src="https://via.placeholder.com/120?text=Photo" alt="Photo">
+                            </div>
+                            <div id="qrPreview" class="qr-prev">QR</div>
                         </div>
                         
-                        <input class="underlined-input" type="text" placeholder="">
-                        <input class="underlined-input" type="text" placeholder="">
-                        <input class="underlined-input" type="text" placeholder="">
+                        <label class="w3-text-grey w3-small">IDNO</label>
+                        <input id="editIdno" class="underlined-input" type="text" placeholder="Enter student ID" readonly>
                         
-                        <div style="height: 100px;"></div>
+                        <label class="w3-text-grey w3-small">LASTNAME</label>
+                        <input id="editLastname" class="underlined-input" type="text" placeholder="Enter last name" readonly>
+                        
+                        <label class="w3-text-grey w3-small">FIRSTNAME</label>
+                        <input id="editFirstname" class="underlined-input" type="text" placeholder="Enter first name" readonly>
+                        
+                        <label class="w3-text-grey w3-small">COURSE</label>
+                        <select id="editCourse" class="underlined-input" style="border-bottom: 1px solid #ccc; padding: 8px 0;" disabled>
+                            <option value="">Select course</option>
+                            <option value="BSIT">BSIT - Bachelor of Science in Information Technology</option>
+                            <option value="BSCS">BSCS - Bachelor of Science in Computer Science</option>
+                            <option value="BSCRIM">BSCRIM - Bachelor of Science in Criminology</option>
+                        </select>
+                        
+                        <label class="w3-text-grey w3-small">LEVEL</label>
+                        <select id="editLevel" class="underlined-input" style="border-bottom: 1px solid #ccc; padding: 8px 0;" disabled>
+                            <option value="">Select level</option>
+                            <option value="1st Year">1st Year</option>
+                            <option value="2nd Year">2nd Year</option>
+                            <option value="3rd Year">3rd Year</option>
+                            <option value="4th Year">4th Year</option>
+                        </select>
+                        
 
-                        <button class="w3-button sidebar-blue w3-block" style="margin-top: 20px;">UPDATE</button>
+                        <div style="display: flex; gap: 10px; margin-top: 20px;">
+                            <button id="updateBtn" class="w3-button sidebar-blue w3-block" style="display: none;">UPDATE</button>
+                            <button id="cancelBtn" class="w3-button w3-border w3-block" style="display: none;">CANCEL</button>
+                        </div>
                     </div>
                 </div>
 
                 <div class="w3-col l8 m7">
-                    <table class="grid-table w3-white">
+                    <table class="grid-table">
                         <thead>
                             <tr class="student-table-header">
                                 <th>IDNO</th>
@@ -123,32 +189,170 @@
                                 <th>ACTION</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <tr style="height: 40px;">
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td style="width: 100px;">
-                                    <button class="action-btn btn-view"><i class="fa fa-eye"></i></button>
-                                    <button class="action-btn btn-delete"><i class="fa fa-times"></i></button>
-                                </td>
-                            </tr>
-                            <tr style="height: 40px;"><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-                            <tr style="height: 40px;"><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-                            <tr style="height: 40px;"><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-                            <tr style="height: 40px;"><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+                        <tbody id="studentsTableBody">
                         </tbody>
                     </table>
                 </div>
+
             </div>
 
         </div>
-            
-        <footer class="w3-container w3-center" style="margin-top: 30px; padding-bottom: 20px;">
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+        <script>
+            let editingStudentId = null;
+            let qrInstance = null;
+            const qrPreview = document.getElementById('qrPreview');
+            const photoPreview = document.getElementById('photoPreview');
+
+            function loadStudents() {
+                const urlParams = new URLSearchParams(window.location.search);
+                const targetIdno = ''; // disable auto-preview; shown only on Edit
+                fetch('/students')
+                    .then(async r => {
+                        if (r.status === 401) {
+                            alert('Session expired. Please log in again.');
+                            window.location.href = '/login';
+                            return null;
+                        }
+                        if (!r.ok) {
+                            const txt = await r.text();
+                            throw new Error('Failed to load students: ' + txt);
+                        }
+                        return r.json();
+                    })
+                    .then(data => {
+                        if (!data || !data.success) {
+                            if (data && data.message) alert(data.message);
+                            return;
+                        }
+                        const tbody = document.getElementById('studentsTableBody');
+                        tbody.innerHTML = '';
+                        data.students.forEach(s => {
+                            const tr = document.createElement('tr');
+                            tr.innerHTML = `
+                                <td>${s.student_id}</td>
+                                <td>${s.last_name}</td>
+                                <td>${s.first_name}</td>
+                                <td>${s.course}</td>
+                                <td>${s.level}</td>
+                                <td>
+                                    <button class="action-btn btn-view" onclick="editStudent(${s.id}, '${s.student_id}', '${s.last_name}', '${s.first_name}', '${s.course}', '${s.level}', '${encodeURIComponent(s.photo || '')}')">✎</button>
+                                    <button class="action-btn btn-delete" onclick="deleteStudent(${s.id})">🗑</button>
+                                </td>
+                            `;
+                            tbody.appendChild(tr);
+                        });
+                        // No preview on load; only on Edit
+                    })
+                    .catch(err => {
+                        alert(err.message);
+                    });
+            }
+
+            function renderPreview(idno, lastname, firstname, course, level, photo) {
+                // If photo is a filename, construct the URL; otherwise use placeholder
+                if (photo && photo.trim() && !photo.startsWith('data:') && !photo.startsWith('http')) {
+                    photoPreview.src = `/static/photos/${encodeURIComponent(photo)}`;
+                } else {
+                    photoPreview.src = photo || 'https://via.placeholder.com/120?text=Photo';
+                }
+                const payload = JSON.stringify({ idno, lname: lastname, fname: firstname, course, level });
+                qrPreview.innerHTML = '';
+                if (qrInstance) qrInstance.clear();
+                qrInstance = new QRCode(qrPreview, {
+                    text: payload,
+                    width: 110,
+                    height: 110,
+                    correctLevel: QRCode.CorrectLevel.M
+                });
+            }
+
+            function editStudent(id, idno, lastname, firstname, course, level, photoEnc = '') {
+                const photo = decodeURIComponent(photoEnc || '');
+                editingStudentId = id;
+                document.getElementById('editIdno').value = idno;
+                document.getElementById('editLastname').value = lastname;
+                document.getElementById('editFirstname').value = firstname;
+                document.getElementById('editCourse').value = course;
+                document.getElementById('editLevel').value = level;
+                
+                // Make all form fields read-only (non-editable)
+                document.getElementById('editIdno').setAttribute('readonly', 'readonly');
+                document.getElementById('editLastname').setAttribute('readonly', 'readonly');
+                document.getElementById('editFirstname').setAttribute('readonly', 'readonly');
+                document.getElementById('editCourse').setAttribute('disabled', 'disabled');
+                document.getElementById('editLevel').setAttribute('disabled', 'disabled');
+                
+                // Show the preview row when entering edit mode
+                document.querySelector('.preview-row').style.display = 'flex';
+                renderPreview(idno, lastname, firstname, course, level, photo);
+                document.getElementById('updateBtn').style.display = 'block';
+                document.getElementById('cancelBtn').style.display = 'block';
+            }
+
+            function cancelEdit() {
+                editingStudentId = null;
+
+                // Keep form fields non-interactive by default
+                document.getElementById('editIdno').setAttribute('readonly', 'readonly');
+                document.getElementById('editLastname').setAttribute('readonly', 'readonly');
+                document.getElementById('editFirstname').setAttribute('readonly', 'readonly');
+                document.getElementById('editCourse').setAttribute('disabled', 'disabled');
+                document.getElementById('editLevel').setAttribute('disabled', 'disabled');
+
+                document.getElementById('editIdno').value = '';
+                document.getElementById('editLastname').value = '';
+                document.getElementById('editFirstname').value = '';
+                document.getElementById('editCourse').value = '';
+                document.getElementById('editLevel').value = '';
+                document.getElementById('updateBtn').style.display = 'none';
+                document.getElementById('cancelBtn').style.display = 'none';
+                // Hide previews when not editing
+                document.querySelector('.preview-row').style.display = 'none';
+                qrPreview.innerHTML = 'QR';
+                photoPreview.src = 'https://via.placeholder.com/120?text=Photo';
+            }
+
+            function deleteStudent(id) {
+                if (confirm('Delete this student?')) {
+                    fetch(`/students/${id}`, { method: 'DELETE' })
+                        .then(async r => {
+                            if (r.status === 401) {
+                                alert('Session expired or unauthorized. Please log in.');
+                                window.location.href = '/login';
+                                return;
+                            }
+                            const data = await r.json().catch(() => ({ success: false, message: 'Invalid server response' }));
+                            if (data.success) {
+                                alert('Student deleted successfully');
+                                loadStudents();
+                            } else {
+                                alert('Delete failed: ' + (data.message || 'Unknown error'));
+                            }
+                        })
+                        .catch(err => {
+                            alert('Network error: ' + err.message);
+                        });
+                }
+            }
+
+            document.getElementById('updateBtn').addEventListener('click', () => {
+                if (!editingStudentId) return;
+                // Redirect to student.html for full update flow (photo + QR)
+                window.location.href = `/student?mode=update&id=${encodeURIComponent(editingStudentId)}`;
+            });
+
+            document.getElementById('cancelBtn').addEventListener('click', cancelEdit);
+
+            window.onload = () => {
+                loadStudents();
+            };
+        </script>
+
+        <footer class="w3-container w3-center" style="margin-top: auto; padding-bottom: 20px;">
             <hr class="w3-border-grey" style="margin-bottom: 15px;">
-            <p class="w3-small w3-text-grey" style="margin:0;">Copyright © Jude Khalil Veloso, Rasheed Boriss Yap, 2025</p>
+            <p class="w3-small w3-text-grey" style="margin:0;">Jude Khalil Veloso, Rasheed Boriss Yap, 2025</p>
         </footer>
 
     </div>

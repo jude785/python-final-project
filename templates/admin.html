@@ -29,7 +29,7 @@
         .grid-table th {
             background-color: #3f51b5; /* w3-indigo match */
             color: white;
-            font-weight: normal;
+            font-weight: bold;
         }
 
         /* 3. Form Box Styling */
@@ -38,6 +38,22 @@
             padding: 20px;
             height: 100%; /* Try to match height of table */
         }
+
+        /* Action buttons for edit/delete */
+        .action-btn {
+            width: 40px;
+            height: 40px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #ccc;
+            background: #fff;
+        }
+        .action-btn.edit i { color: #333; }
+        .action-btn.delete i { color: #d9534f; }
+
+        body { display: flex; flex-direction: column; min-height: 100vh; }
+        .page-body { flex: 1; }
     </style>
 </head>
 <body class="w3-white">
@@ -48,31 +64,41 @@
 
     <div class="w3-sidebar w3-bar-block sidebar-blue" style="width:240px; top:43px; z-index:3;">
         <div style="margin-top: 20px;"></div>
-        <a href="#" class="w3-bar-item w3-button w3-padding-16 w3-white w3-text-blue">USER MNGT</a>
-        <a href="#" class="w3-bar-item w3-button w3-padding-16">STUDENT MNGT</a>
-        <a href="#" class="w3-bar-item w3-button w3-padding-16">VIEW ATTENDANCE</a>
-        <a href="#" class="w3-bar-item w3-button w3-padding-16">LOGOUT</a>
+        <a href="#" class="w3-bar-item w3-button w3-padding-16 w3-white w3-text-blue">USER MANAGEMENT</a>
+        <a href="/studentmngt" class="w3-bar-item w3-button w3-padding-16">STUDENT MANAGEMENT</a>
+        <a href="/attendance" class="w3-bar-item w3-button w3-padding-16">VIEW ATTENDANCE</a>
+        <a href="/logout" class="w3-bar-item w3-button w3-padding-16">LOGOUT</a>
     </div>
 
-    <div style="margin-left: 240px; margin-top: 43px; padding: 20px;">
+    <div class="page-body" style="margin-left: 240px; margin-top: 43px; padding: 20px;">
 
-        <h4 class="w3-text-grey" style="margin-bottom: 20px;">USER MANAGEMENT</h4>
+        <h4 class="w3-text-black" style="margin-bottom: 20px;">USER MANAGEMENT</h4>
+
+        {% if error %}
+        <div class="w3-panel w3-red">
+            <p>{{ error }}</p>
+        </div>
+        {% endif %}
 
         <div class="w3-row-padding" style="margin: 0 -16px;">
             
             <div class="w3-col m4">
                 <div class="form-box">
-                    <form>
+                    <form method="POST" action="/admin/users">
                         <div class="w3-margin-bottom">
-                            <input class="w3-input w3-border" type="text" placeholder="email" style="padding: 10px;">
+                            <input class="w3-input w3-border" name="name" type="text" placeholder="name" required style="padding: 10px;">
+                        </div>
+
+                        <div class="w3-margin-bottom">
+                            <input class="w3-input w3-border" name="email" type="email" placeholder="email" required style="padding: 10px;">
                         </div>
                         
                         <div class="w3-margin-bottom">
-                            <input class="w3-input w3-border" type="password" placeholder="password" style="padding: 10px;">
+                            <input class="w3-input w3-border" name="password" type="password" placeholder="password" required style="padding: 10px;">
                         </div>
 
                         <div class="w3-right-align" style="margin-top: 30px;">
-                            <button class="w3-button w3-indigo w3-text-white" style="width: 100px;">SAVE</button>
+                            <button class="w3-button w3-indigo w3-text-white" style="width: 100px;">ADD</button>
                         </div>
                     </form>
                 </div>
@@ -90,33 +116,36 @@
                         </tr>
                     </thead>
                     <tbody>
+                        {% for u in users %}
                         <tr style="height: 50px;">
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td style="width: 120px;">
-                                <button class="w3-button w3-white w3-border w3-border-grey w3-tiny"><i class="fa fa-pencil"></i></button>
-                                <button class="w3-button w3-white w3-border w3-border-grey w3-tiny"><i class="fa fa-trash"></i></button>
+                            <td>{{ u.id }}</td>
+                            <td>{{ u.name }}</td>
+                            <td>{{ u.email }}</td>
+                            <td>••••••</td>
+                            <td style="display:flex; align-items:center; justify-content:center; gap:8px; padding:8px 12px;">
+                                <a class="action-btn edit" title="Edit" href="/admin/users/{{ u.id }}/edit">
+                                    <i class="fa fa-pencil"></i>
+                                </a>
+                                <form method="POST" action="/admin/users/{{ u.id }}/delete" style="display:inline;">
+                                    <button class="action-btn delete" title="Delete">
+                                        <i class="fa fa-trash"></i>
+                                    </button>
+                                </form>
+                    
                             </td>
                         </tr>
-                        <tr style="height: 50px;">
-                            <td></td><td></td><td></td><td></td><td></td>
-                        </tr>
-                        <tr style="height: 50px;">
-                            <td></td><td></td><td></td><td></td><td></td>
-                        </tr>
+                        {% endfor %}
                     </tbody>
                 </table>
             </div>
 
         </div>
 
-        <footer class="w3-container w3-center" style="margin-top: 50px;">
-            <hr class="w3-border-grey">
-            <p class="w3-small w3-text-grey">Copyright © Jude Khalil Veloso, Rasheed Boriss Yap, 2025</p>
-        </footer>
+    </div>
 
+    <div style="margin-left: 240px; text-align: center; margin-top: 20px; padding: 20px;">
+        <hr class="w3-border-grey">
+        <p class="w3-small w3-text-grey">Jude Khalil Veloso, Rasheed Boriss Yap, 2025</p>
     </div>
 
 </body>
